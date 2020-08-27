@@ -37,6 +37,7 @@ public class TheDials : MonoBehaviour {
     string CheckForDuplicates = "";
     bool Duplicated = false;
     bool IndicatorCheck = false;
+    bool Unicorn = false;
 
     void Awake () {
         moduleId = moduleIdCounter++;
@@ -49,14 +50,24 @@ public class TheDials : MonoBehaviour {
     }
 
     void Start () {
+      if (Bomb.GetBatteryCount() == 0 && Bomb.GetPortCount() == 0) {
+        Unicorn = true;
+        Debug.LogFormat("[The Dials #{0}] There are no batteries nor ports. All dials should be set to 0.", moduleId);
+      }
       Jon.text = "";
       SerialNumber = Bomb.GetSerialNumberLetters().Join("");
       Indicators = Bomb.GetIndicators().Join("");
       GenerateLetters();
+      Debug.LogFormat("[The Dials #{0}] The given letters are {1}, {2}, {3}, {4}.", moduleId, SelectedLetters[0], SelectedLetters[1], SelectedLetters[2], SelectedLetters[3]);
       for (int i = 0; i < 4; i++) {
         DialPositions[i].Shuffle(); //Randomizes dial turning position
       }
       AnswerGenerator();
+      if (Unicorn) {
+        for (int i = 0; i < 4; i++) {
+          EndingRotations[i] = 1;
+        }
+      }
     }
 
     void ShowLetter (KMSelectable Dial) {
