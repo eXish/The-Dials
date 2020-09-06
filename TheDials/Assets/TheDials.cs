@@ -323,11 +323,16 @@ public class TheDials : MonoBehaviour {
       for (int i = 0; i < 4; i++) {
         for (int j = 0; j < Alphabet.Length; j++) {
           if (SelectedLetters[i] == Alphabet[j].ToString()) {
-            NumberedLetters[i] = j + 1;
+            NumberedLetters[i] = j;
+            Debug.LogFormat("[The Dials #{0}] Letter {1} is {2}.", moduleId, i + 1, j);
           }
         }
       }
-      EndingRotations[2] = ((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2] / NumberedLetters[3]) % 8 + 1;
+      EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
+      while (EndingRotations[2] < 0) {
+        EndingRotations[2] += 8;
+      }
+      EndingRotations[2]++;
       Debug.LogFormat("[The Dials #{0}] The third dial's rotation is {1}.", moduleId, EndingRotations[2]);
       //Dial 4, Giant ass table why toast
       int[][] GiantAssTable = new int[14][] {
