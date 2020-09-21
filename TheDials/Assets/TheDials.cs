@@ -14,13 +14,6 @@ public class TheDials : MonoBehaviour {
     public TextMesh Jon;
     public KMSelectable Submit;
 
-    static int moduleIdCounter = 1;
-    int moduleId;
-    private bool moduleSolved;
-
-    string[] SelectedLetters = {"A", "B", "C", "D"};
-    string AlphabetButSmol = "ACDEHILMNORSTU";
-    string SerialNumber = "";
     int[][] DialPositions = new int[4][] {
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,},
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,},
@@ -29,15 +22,23 @@ public class TheDials : MonoBehaviour {
     };
     int[] Rotations = {0, 0, 0, 0};
     int[] EndingRotations = {0, 0, 0, 0};
-    bool Error = false;
 
+    string[] SelectedLetters = {"A", "B", "C", "D"};
+    string AlphabetButSmol = "ACDEHILMNORSTU";
+    string SerialNumber = "";
     string Indicators = "";
+    string CheckForDuplicates = "";
+
+    bool Error = false;
     bool SharedLetterSerialNumberBitch = false;
     bool Vowel = false;
-    string CheckForDuplicates = "";
     bool Duplicated = false;
     bool IndicatorCheck = false;
     bool Unicorn = false;
+
+    static int moduleIdCounter = 1;
+    int moduleId;
+    private bool moduleSolved;
 
     void Awake () {
         moduleId = moduleIdCounter++;
@@ -59,23 +60,18 @@ public class TheDials : MonoBehaviour {
       Indicators = Bomb.GetIndicators().Join("");
       GenerateLetters();
       Debug.LogFormat("[The Dials #{0}] The given letters are {1}, {2}, {3}, {4}.", moduleId, SelectedLetters[0], SelectedLetters[1], SelectedLetters[2], SelectedLetters[3]);
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++)
         DialPositions[i].Shuffle(); //Randomizes dial turning position
-      }
       AnswerGenerator();
-      if (Unicorn) {
-        for (int i = 0; i < 4; i++) {
+      if (Unicorn)
+        for (int i = 0; i < 4; i++)
           EndingRotations[i] = 1;
-        }
-      }
     }
 
     void ShowLetter (KMSelectable Dial) {
-      for (int i = 0; i < 4; i++) {
-        if (Dial == Dials[i]) {
+      for (int i = 0; i < 4; i++)
+        if (Dial == Dials[i])
           Jon.text = SelectedLetters[i];
-        }
-      }
     }
 
     void HideLetter (KMSelectable Dial) {
@@ -84,39 +80,32 @@ public class TheDials : MonoBehaviour {
 
     void DialTurn (KMSelectable Dial) {
       Audio.PlaySoundAtTransform("Brrr", transform);
-      if (moduleSolved) {
+      if (moduleSolved)
         return;
-      }
-      if (Error) {
+      if (Error)
         GetComponent<KMBombModule>().HandlePass();
-      }
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++)
         if (Dial == Dials[i]) {
           Rotations[i]++;
           Rotations[i] %= 8;
           Jon.text = DialPositions[i][Rotations[i]].ToString();
           Dial.transform.localEulerAngles = new Vector3(0, (float)45 * Rotations[i], 0);
         }
-      }
     }
 
     void SubmitPress () {
-      if (moduleSolved) {
+      if (moduleSolved)
         return;
-      }
       bool Validity = true;
-      for (int i = 0; i < 4; i++) {
-        if (DialPositions[i][Rotations[i]] != EndingRotations[i]) {
+      for (int i = 0; i < 4; i++)
+        if (DialPositions[i][Rotations[i]] != EndingRotations[i])
           Validity = false;
-        }
-      }
       if (Validity) {
         GetComponent<KMBombModule>().HandlePass();
         moduleSolved = true;
       }
-      else {
+      else
         GetComponent<KMBombModule>().HandleStrike();
-      }
     }
 
     void GenerateLetters () {
@@ -131,51 +120,42 @@ public class TheDials : MonoBehaviour {
       for (int i = 0; i < 4; i++) {
         SelectedLetters[i] = AlphabetButSmol[UnityEngine.Random.Range(0, AlphabetButSmol.Length)].ToString();
         for (int j = 0; j < SerialNumber.Length; j++) {
-          if (SelectedLetters[i] == SerialNumber[j].ToString()) {
+          if (SelectedLetters[i] == SerialNumber[j].ToString())
             SharedLetterSerialNumberBitch = true;
-          }
-          if ((i == 1 || i == 3) && VowelCheck(SelectedLetters[i])) {
+          if ((i == 1 || i == 3) && VowelCheck(SelectedLetters[i]))
             Vowel = true;
-          }
         }
         CheckForDuplicates += SelectedLetters[i];
       }
       for (int i = 0; i < 4; i++) {
         int CheckForTwo = 0;
-        for (int j = 0; j < 4; j++) {
-          if (SelectedLetters[i] == CheckForDuplicates[j].ToString()) {
+        for (int j = 0; j < 4; j++)
+          if (SelectedLetters[i] == CheckForDuplicates[j].ToString())
             CheckForTwo++;
-          }
-        }
         if (CheckForTwo > 1) {
           Duplicated = true;
           goto Escape; //forgot how far breaks break
         }
       }
       Escape:
-      for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < Indicators.Length; j++) {
+      for (int i = 0; i < 4; i++)
+        for (int j = 0; j < Indicators.Length; j++)
           if (SelectedLetters[i] == Indicators[j].ToString()) {
             IndicatorCheck = true;
             goto Leave;
           }
-        }
-      }
       Leave:
       if ((SharedLetterSerialNumberBitch && Vowel && !IndicatorCheck && !Duplicated) || (!SharedLetterSerialNumberBitch && !Vowel && IndicatorCheck && Duplicated)
-      || (!SharedLetterSerialNumberBitch && !Vowel && !IndicatorCheck && !Duplicated)) { //Checks if the Venn Diagram will have an answer
+      || (!SharedLetterSerialNumberBitch && !Vowel && !IndicatorCheck && !Duplicated))//Checks if the Venn Diagram will have an answer
         goto Restart;
-      }
     }
 
     bool VowelCheck (string ThingToCheck) {
       string Vowels = "AEIOU";
-      if (Vowels.Contains(ThingToCheck)) {
+      if (Vowels.Contains(ThingToCheck))
         return true;
-      }
-      else {
+      else
         return false;
-      }
     }
 
     void AnswerGenerator () {
@@ -318,16 +298,19 @@ public class TheDials : MonoBehaviour {
       Everything += Bomb.GetPortCount() + Bomb.GetBatteryCount() + Bomb.GetBatteryHolderCount() + Bomb.GetPortPlates().Count() + Bomb.GetIndicators().Count() + Bomb.GetSolvableModuleNames().Count() + 1;
       Debug.LogFormat("[The Dials #{0}] Adding all the necessary things gives {1}.", moduleId, Everything);
       Everything *= (Everything - 1) % 9 + 1;
-      Debug.LogFormat("[The Dials #{0}] Multiplying by the digital root gives {1}.", moduleId, Everything);
+      Everything++;
+      Debug.LogFormat("[The Dials #{0}] Multiplying by the digital root and adding 1 gives {1}.", moduleId, Everything);
       int[] NumberedLetters = {0, 0, 0, 0};
-      for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < Alphabet.Length; j++) {
+      for (int i = 0; i < 4; i++)
+        for (int j = 0; j < Alphabet.Length; j++)
           if (SelectedLetters[i] == Alphabet[j].ToString()) {
-            NumberedLetters[i] = j + 1;
+            NumberedLetters[i] = j;
+            Debug.LogFormat("[The Dials #{0}] Letter {1} is {2}.", moduleId, i + 1, j);
           }
-        }
-      }
-      EndingRotations[2] = ((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2] / NumberedLetters[3]) % 8 + 1;
+      EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
+      while (EndingRotations[2] < 0)
+        EndingRotations[2] += 8;
+      EndingRotations[2]++;
       Debug.LogFormat("[The Dials #{0}] The third dial's rotation is {1}.", moduleId, EndingRotations[2]);
       //Dial 4, Giant ass table why toast
       int[][] GiantAssTable = new int[14][] {
@@ -351,12 +334,10 @@ public class TheDials : MonoBehaviour {
       };
       int[] IndexingForGiantAssTable = {0,0};
       for (int i = 0; i < AlphabetButSmol.Length; i++) {
-        if (SelectedLetters[0] == AlphabetButSmol[i].ToString()) {
+        if (SelectedLetters[0] == AlphabetButSmol[i].ToString())
           IndexingForGiantAssTable[0] = i;
-        }
-        if (SelectedLetters[2] == AlphabetButSmol[i].ToString()) {
-          IndexingForGiantAssTable[0] = i;
-        }
+        if (SelectedLetters[2] == AlphabetButSmol[i].ToString())
+          IndexingForGiantAssTable[1] = i;
       }
       EndingRotations[3] = GiantAssTable[IndexingForGiantAssTable[1]][IndexingForGiantAssTable[0]];
       Debug.LogFormat("[The Dials #{0}] The fourth dial's rotation is {1}.", moduleId, EndingRotations[3]);
@@ -376,7 +357,9 @@ public class TheDials : MonoBehaviour {
           Dials[i].OnHighlightEnded();
           yield return new WaitForSeconds(.5f);
         }
+        yield break;
       }
+      yield return null;
       if (Command.Length != 4) {
         yield return null;
         yield return "sendtochaterror I don't understand!";
@@ -394,12 +377,11 @@ public class TheDials : MonoBehaviour {
     }
 
     IEnumerator TwitchHandleForcedSolve () {
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++)
         while (DialPositions[i][Rotations[i]] != EndingRotations[i]) {
           Dials[i].OnInteract();
           yield return new WaitForSeconds(.1f);
         }
-      }
       Submit.OnInteract();
     }
 }
