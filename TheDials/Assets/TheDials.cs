@@ -307,9 +307,18 @@ public class TheDials : MonoBehaviour {
             NumberedLetters[i] = j;
             Debug.LogFormat("[The Dials #{0}] Letter {1} is {2}.", moduleId, i + 1, j);
           }
+<<<<<<< HEAD
       EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
       while (EndingRotations[2] < 0)
         EndingRotations[2] += 8;
+=======
+        }
+      }
+      EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
+      while (EndingRotations[2] < 0) {
+        EndingRotations[2] += 8;
+      }
+>>>>>>> 7810958cf34486063ff6a0c6a7122421dec8401a
       EndingRotations[2]++;
       Debug.LogFormat("[The Dials #{0}] The third dial's rotation is {1}.", moduleId, EndingRotations[2]);
       //Dial 4, Giant ass table why toast
