@@ -20,21 +20,21 @@ public class TheDials : MonoBehaviour {
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,},
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,}
     };
-    int[] Rotations = {0, 0, 0, 0};
     int[] EndingRotations = {0, 0, 0, 0};
+    int[] Rotations = {0, 0, 0, 0};
 
     string[] SelectedLetters = {"A", "B", "C", "D"};
     string AlphabetButSmol = "ACDEHILMNORSTU";
-    string SerialNumber = "";
-    string Indicators = "";
     string CheckForDuplicates = "";
+    string Indicators = "";
+    string SerialNumber = "";
 
-    bool Error = false;
-    bool SharedLetterSerialNumberBitch = false;
-    bool Vowel = false;
     bool Duplicated = false;
+    bool Error = false;
     bool IndicatorCheck = false;
+    bool SharedLetterSerialNumberBitch = false;
     bool Unicorn = false;
+    bool Vowel = false;
 
     static int moduleIdCounter = 1;
     int moduleId;
@@ -151,8 +151,7 @@ public class TheDials : MonoBehaviour {
     }
 
     bool VowelCheck (string ThingToCheck) {
-      string Vowels = "AEIOU";
-      if (Vowels.Contains(ThingToCheck))
+      if (ThingToCheck.Contains("AEIOU"))
         return true;
       else
         return false;
@@ -220,7 +219,6 @@ public class TheDials : MonoBehaviour {
         Error = true;
         Debug.LogFormat("[The Dials #{0}] There has been a grave error. The module will now solve upon any input.", moduleId);
         return;
-        break;
       }
       Debug.LogFormat("[The Dials #{0}] The first dial's rotation is {1}.", moduleId, EndingRotations[0]);
       //Flow chart, dial 2
@@ -307,18 +305,12 @@ public class TheDials : MonoBehaviour {
             NumberedLetters[i] = j;
             Debug.LogFormat("[The Dials #{0}] Letter {1} is {2}.", moduleId, i + 1, j);
           }
-<<<<<<< HEAD
       EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
       while (EndingRotations[2] < 0)
         EndingRotations[2] += 8;
-=======
-        }
-      }
       EndingRotations[2] = ((((Everything + NumberedLetters[0] - NumberedLetters[1]) * NumberedLetters[2]) / NumberedLetters[3]) % 8);
-      while (EndingRotations[2] < 0) {
+      while (EndingRotations[2] < 0)
         EndingRotations[2] += 8;
-      }
->>>>>>> 7810958cf34486063ff6a0c6a7122421dec8401a
       EndingRotations[2]++;
       Debug.LogFormat("[The Dials #{0}] The third dial's rotation is {1}.", moduleId, EndingRotations[2]);
       //Dial 4, Giant ass table why toast
@@ -327,19 +319,16 @@ public class TheDials : MonoBehaviour {
         new int[14] {2, 7, 8, 5, 8, 3, 6, 1, 4, 7, 2, 7, 8, 5},
         new int[14] {3, 6, 1, 4, 7, 2, 7, 8, 5, 8, 3, 5, 1, 4},
         new int[14] {4, 5, 2, 3, 8, 1, 8, 7, 6, 7, 4, 6, 2, 3},
-
         new int[14] {5, 4, 3, 2, 1, 8, 7, 8, 7, 6, 5, 4, 3, 2},
         new int[14] {6, 3, 4, 1, 2, 7, 8, 7, 8, 5, 6, 3, 4, 1},
         new int[14] {7, 2, 5, 8, 3, 8, 1, 6, 7, 4, 7, 2, 5, 8},
         new int[14] {8, 1, 6, 7, 4, 7, 2, 5, 8, 3, 8, 1, 7, 7},
-
         new int[14] {7, 8, 7, 8, 5, 6, 3, 4, 1, 2, 7, 8, 6, 8},
         new int[14] {8, 7, 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 8, 7},
         new int[14] {1, 8, 7, 6, 7, 4, 5, 2, 3, 8, 1, 8, 7, 6},
         new int[14] {2, 7, 8, 5, 8, 3, 6, 1, 4, 7, 2, 7, 8, 5},
-
         new int[14] {3, 6, 1, 4, 7, 2, 7, 8, 5, 8, 3, 6, 1, 4},
-        new int[14] {4, 5, 2, 3, 8, 1, 8, 7, 6, 7, 4, 5, 2, 3},
+        new int[14] {4, 5, 2, 3, 8, 1, 8, 7, 6, 7, 4, 5, 2, 3}
       };
       int[] IndexingForGiantAssTable = {0,0};
       for (int i = 0; i < AlphabetButSmol.Length; i++) {
@@ -359,17 +348,14 @@ public class TheDials : MonoBehaviour {
     IEnumerator ProcessTwitchCommand (string Command) {
       Command = Command.Trim().ToUpper();
       yield return null;
-      if (Command == "CYCLE") {
+      if (Command == "CYCLE")
         for (int i = 0; i < 4; i++) {
           Dials[i].OnHighlight();
           yield return new WaitForSeconds(.5f);
           Dials[i].OnHighlightEnded();
           yield return new WaitForSeconds(.5f);
         }
-        yield break;
-      }
-      yield return null;
-      if (Command.Length != 4) {
+      else if (Command.Length != 4) {
         yield return null;
         yield return "sendtochaterror I don't understand!";
       }
