@@ -14,8 +14,17 @@ MonoBehaviour:
   id: TheDials
   title: The Dials
   author: me
-  description: All your favorite manual concepts, mixed up into one time-consuming
+  description: 'All your favorite manual concepts, mixed up into one time-consuming
     disaster.
+
+
+    Manual originally by Epic_Toast.
+
+
+    Manual can be found at ktane.timwi.de
+
+
+    If you find any bugs, contact Fartlicker777#9169 on Discord.'
   version: 
   outputFolder: build
   previewImage: {fileID: 2800000, guid: b0b4e97ae7dfe464fa994d66f0c538e8, type: 3}

@@ -1907,11 +1907,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4346436718a075b458fb49e1d1fbcd8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bomb: {fileID: 0}
-  Audio: {fileID: 0}
-  Dials: []
-  Jon: {fileID: 0}
-  Submit: {fileID: 0}
+  Bomb: {fileID: 114454383462897410}
+  Audio: {fileID: 114915473299363512}
+  Dials:
+  - {fileID: 114292699800006160}
+  - {fileID: 114918209832209770}
+  - {fileID: 114493462320235716}
+  - {fileID: 114454758541374682}
+  Jon: {fileID: 102462328448716804}
+  Submit: {fileID: 114371141281494940}
 --- !u!114 &114454383462897410
 MonoBehaviour:
   m_ObjectHideFlags: 1
