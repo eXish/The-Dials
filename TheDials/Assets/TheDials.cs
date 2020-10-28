@@ -151,7 +151,7 @@ public class TheDials : MonoBehaviour {
     }
 
     bool VowelCheck (string ThingToCheck) {
-      if (ThingToCheck.Contains("AEIOU"))
+      if (ThingToCheck.Any(x => "AEIOU".Contains(x)))
         return true;
       else
         return false;
@@ -169,7 +169,7 @@ public class TheDials : MonoBehaviour {
       }
       if (Vowel) {
         NumberForAnswer += 4;
-        Debug.LogFormat("[The Dials #{0}] There is a vowel on the module.", moduleId);
+        Debug.LogFormat("[The Dials #{0}] There is a vowel on the module in either the second or fourth position.", moduleId);
       }
       if (IndicatorCheck) {
         NumberForAnswer += 8;
