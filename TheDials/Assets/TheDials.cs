@@ -20,21 +20,21 @@ public class TheDials : MonoBehaviour {
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,},
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,}
     };
-    int[] EndingRotations = {0, 0, 0, 0};
-    int[] Rotations = {0, 0, 0, 0};
+    int[] EndingRotations = new int[4];
+    int[] Rotations = new int[4];
 
     string[] SelectedLetters = {"A", "B", "C", "D"};
     string AlphabetButSmol = "ACDEHILMNORSTU";
-    string CheckForDuplicates = "";
-    string Indicators = "";
-    string SerialNumber = "";
+    string CheckForDuplicates;
+    string Indicators;
+    string SerialNumber;
 
-    bool Duplicated = false;
-    bool Error = false;
-    bool IndicatorCheck = false;
-    bool SharedLetterSerialNumberBitch = false;
-    bool Unicorn = false;
-    bool Vowel = false;
+    bool Duplicated;
+    bool Error;
+    bool IndicatorCheck;
+    bool SharedLetterSerialNumberBitch;
+    bool Unicorn;
+    bool Vowel;
 
     static int moduleIdCounter = 1;
     int moduleId;
@@ -195,10 +195,10 @@ public class TheDials : MonoBehaviour {
         EndingRotations[0] = 7;
         break;
         case 8:
-        EndingRotations[0] = Bomb.GetIndicators().Count();
+        EndingRotations[0] = Bomb.GetIndicators().Count() % 8 + 1;
         break;
         case 9:
-        EndingRotations[0] = int.Parse(Bomb.GetSerialNumber()[5].ToString()) % 8 + 1;
+        EndingRotations[0] = Bomb.GetSerialNumberNumbers().Last() % 8 + 1;
         break;
         case 11:
         EndingRotations[0] = 8;
@@ -298,7 +298,7 @@ public class TheDials : MonoBehaviour {
       Everything *= (Everything - 1) % 9 + 1;
       Everything++;
       Debug.LogFormat("[The Dials #{0}] Multiplying by the digital root and adding 1 gives {1}.", moduleId, Everything);
-      int[] NumberedLetters = {0, 0, 0, 0};
+      int[] NumberedLetters = new int[4];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < Alphabet.Length; j++)
           if (SelectedLetters[i] == Alphabet[j].ToString()) {
@@ -330,7 +330,7 @@ public class TheDials : MonoBehaviour {
         new int[14] {3, 6, 1, 4, 7, 2, 7, 8, 5, 8, 3, 6, 1, 4},
         new int[14] {4, 5, 2, 3, 8, 1, 8, 7, 6, 7, 4, 5, 2, 3}
       };
-      int[] IndexingForGiantAssTable = {0,0};
+      int[] IndexingForGiantAssTable = new int[2];
       for (int i = 0; i < AlphabetButSmol.Length; i++) {
         if (SelectedLetters[0] == AlphabetButSmol[i].ToString())
           IndexingForGiantAssTable[0] = i;
@@ -355,12 +355,9 @@ public class TheDials : MonoBehaviour {
           Dials[i].OnHighlightEnded();
           yield return new WaitForSeconds(.5f);
         }
-      else if (Command.Length != 4) {
-        yield return null;
+      else if (Command.Length != 4)
         yield return "sendtochaterror I don't understand!";
-      }
       else {
-        yield return null;
         for (int i = 0; i < 4; i++) {
           while (DialPositions[i][Rotations[i]] != int.Parse(Command[i].ToString())) {
             Dials[i].OnInteract();
