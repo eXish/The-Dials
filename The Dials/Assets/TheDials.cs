@@ -35,8 +35,8 @@ public class TheDials : MonoBehaviour {
    string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
    string[][] Maze = new string[][] { //Shows walls
       new string[] { "ULR ", "UL  ", "UR  ", "UL  ", "UD  ", "UD  ", "UD  ", "UR  "},
-      new string[] { "L   ", "R   ", "LD  ", "LD  ", "U   ", "UR  ", "UL  ", "R   "},
-      new string[] { "LR  ", " LD ", "D   ", "UR  ", "LR  ", "LR  ", "LR  ", "LRD "},
+      new string[] { "L   ", "R   ", "LD  ", " D  ", "U   ", "UR  ", "UL  ", "R   "},
+      new string[] { "LR  ", " LD ", "UD  ", "UR  ", "LR  ", "LR  ", "LR  ", "LRD "},
       new string[] { "L   ", "UR  ", "UL  ", "D   ", "RD  ", "LR  ", "LD  ", "UR  "},
       new string[] { "LR  ", "LR  ", "LD  ", "UR  ", "ULD ", "R   ", "UL  ", "R   "},
       new string[] { "LR  ", "LD  ", "UD  ", " D  ", "U R ", "LD  ", "RD  ", "LR  "},
@@ -225,7 +225,6 @@ public class TheDials : MonoBehaviour {
       DialOne();
       DialTwo();
       DialThree();
-      DialFour();
    }
 
    void Reset () {
@@ -360,6 +359,11 @@ public class TheDials : MonoBehaviour {
             }
          }
       }
+      if (MultipleAnswers(CurPosition[0], CurPosition[1], GoalPosition[0], GoalPosition[1]))
+      {
+         AnswerGenerator();
+         return;
+      }
       BFS(CurPosition[0] * 10 + CurPosition[1], GoalPosition[0] * 10 + GoalPosition[1]);
    }
 
@@ -452,6 +456,7 @@ public class TheDials : MonoBehaviour {
       EndingRotations[2] = Array.IndexOf(dirConvert, w) == -1 ? Array.IndexOf(dirConvertFuckYouNonexistentStringReverseFunction, w) : Array.IndexOf(dirConvert, w);
 
       //Debug.LogFormat("[The Dials #{0}] The third dial's rotation is {1}.", moduleId, EndingRotations[2]);
+      DialFour();
    }
 
    void DialFour () {
@@ -498,8 +503,54 @@ public class TheDials : MonoBehaviour {
       Debug.LogFormat("[The Dials #{0}] The fourth dial's final rotation is {1}.", moduleId, CardinalDirections[EndingRotations[3]]);
    }
 
+    bool MultipleAnswers(int startX, int startY, int endX, int endY)
+    {
+        var q = new Queue<int[]>();
+        var allMoves = new List<Movement>();
+        var startPoint = new int[] { startX, startY, 0 };
+        var target = new int[] { endX, endY };
+        q.Enqueue(startPoint);
+        int targetLength = -1;
+        int ct = 0;
+        while (q.Count > 0)
+        {
+            var next = q.Dequeue();
+            if (next[0] == target[0] && next[1] == target[1])
+            {
+                if (targetLength == -1)
+                    targetLength = next[2];
+                ct++;
+            }
+            if (targetLength != -1 && q.All(x => x[2] != targetLength))
+                goto foundSols;
+            string paths = Maze[next[0]][next[1]];
+            var cell = paths.Replace(" ", "");
+            var allDirections = "ULRD";
+            var offsets = new int[,] { { -1, 0 }, { 0, -1 }, { 0, 1 }, { 1, 0 } };
+            for (int i = 0; i < 4; i++)
+            {
+                var check = new int[] { next[0] + offsets[i, 0], next[1] + offsets[i, 1] };
+                if (!cell.Contains(allDirections[i]) && !allMoves.Any(x => x.start[0] == check[0] && x.start[1] == check[1]))
+                {
+                    q.Enqueue(new int[] { next[0] + offsets[i, 0], next[1] + offsets[i, 1], next[2] + 1 });
+                    allMoves.Add(new Movement { start = next, end = new int[] { next[0] + offsets[i, 0], next[1] + offsets[i, 1], next[2] + 1 } });
+                }
+            }
+        }
+        foundSols:
+        if (ct > 1)
+            return true;
+        return false;
+    }
+
+    class Movement
+    {
+        public int[] start;
+        public int[] end;
+    }
+
 #pragma warning disable 414
-   private readonly string TwitchHelpMessage = @"Use !{0} cycle to cycle the letters. Use !{0} 1234 to set the dials to their respective positions in their respective order and then submit.";
+    private readonly string TwitchHelpMessage = @"Use !{0} cycle to cycle the letters. Use !{0} 1234 to set the dials to their respective positions in their respective order and then submit.";
 #pragma warning restore 414
 
    IEnumerator ProcessTwitchCommand (string Command) {
