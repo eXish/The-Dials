@@ -14,6 +14,7 @@ public class TheDials : MonoBehaviour {
    public KMSelectable[] Dials;
    public TextMesh Jon;
    public KMSelectable Submit;
+   public VoltageMeterReader VMR;
 
    int[][] DialPositions = new int[4][] {
       new int[8] {1, 2, 3, 4, 5, 6, 7, 8,},
@@ -266,7 +267,7 @@ public class TheDials : MonoBehaviour {
             EndingRotations[0] = 6;
             break;
          case 6:
-            EndingRotations[0] = Bomb.GetSolvableModuleNames().Count() % 8;
+            EndingRotations[0] = VMR.GetVoltageMeterInt() == -1 ? 0 : VMR.GetVoltageMeterInt() % 8;
             break;
          case 7:
             EndingRotations[0] = 7;
