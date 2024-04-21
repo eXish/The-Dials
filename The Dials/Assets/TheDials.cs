@@ -581,7 +581,7 @@ public class TheDials : MonoBehaviour {
 
    IEnumerator TwitchHandleForcedSolve () {
       for (int i = 0; i < 4; i++) {
-         while (DialPositions[i][Rotations[i]] != EndingRotations[i]) {
+         while (DialPositions[i][Rotations[i]] != EndingRotations[i] + 1) {
             Dials[i].OnInteract();
             yield return new WaitForSeconds(.1f);
          }
