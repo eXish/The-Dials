@@ -551,7 +551,7 @@ public class TheDials : MonoBehaviour {
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use !{0} cycle to cycle the letters. Use !{0} 1234 to set the dials to their respective positions in their respective order and then submit.";
+    private readonly string TwitchHelpMessage = @"Use !{0} cycle to cycle the letters. Use !{0} 1234 to set the dials positions (1-8 from N to NW) in their respective order and then submit.";
 #pragma warning restore 414
 
    IEnumerator ProcessTwitchCommand (string Command) {
@@ -565,7 +565,7 @@ public class TheDials : MonoBehaviour {
             yield return new WaitForSeconds(.5f);
          }
       }
-      else if (Command.Length != 4 || !Command.Any(x => "12345678".Contains(x))) {
+      else if (Command.Length != 4 || !Command.All(x => "12345678".Contains(x))) {
          yield return "sendtochaterror I don't understand!";
       }
       else {
